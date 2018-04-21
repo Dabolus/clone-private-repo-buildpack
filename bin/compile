@@ -34,8 +34,6 @@ if [ "$ssh_key" != "" ]; then
 	for i in "${HOST[@]}"; do
 		ssh -oStrictHostKeyChecking=no -T $i 2>&1 | indent
 	done
-
-	exit 0
 else
 	echo "-----> No SSH private key, skipping key setup"
 fi
@@ -48,3 +46,5 @@ if [ "$git_args" != "" ]; then
 else
     echo "-----> No git args specified, skipping repo cloning"
 fi
+
+exit 0
