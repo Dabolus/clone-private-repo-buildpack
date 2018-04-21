@@ -9,9 +9,11 @@ function indent() {
 }
 
 ENV_DIR=${3:-}
+ssh_hosts="$(cat $ENV_DIR/SSH_HOSTS)"
 ssh_key="$(cat $ENV_DIR/SSH_KEY)"
-if [ -f $ENV_DIR/SSH_HOSTS ]; then
-	ssh_hosts="$(cat $ENV_DIR/SSH_HOSTS)"
+git_args="$(cat $ENV_DIR/GIT_ARGS)"
+
+if [ "$ssh_hosts" != "" ]; then
 	echo "Setting SSH hosts to: $ssh_hosts"
 else
 	ssh_hosts="git@github.com"
@@ -35,5 +37,14 @@ if [ "$ssh_key" != "" ]; then
 
 	exit 0
 else
-	echo "-----> No SSH private key"
+	echo "-----> No SSH private key, skipping key setup"
+fi
+
+if [ "$git_args" != "" ]; then
+    args_array=( ${git_args} )
+
+    echo "Executing command: 'git clone ${args_array[@]}'"
+    git clone ${args_array[@]}
+else
+    echo "-----> No git args specified, skipping repo cloning"
 fi
